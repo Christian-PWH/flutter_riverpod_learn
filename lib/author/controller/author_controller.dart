@@ -6,25 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'author_controller.g.dart';
 
-// @Riverpod(keepAlive: true)
-// Future<List<BookModel>> filteredList(FilteredListRef ref,
-//     {String searchText = ''}) {
-//   final books = ref.watch(authorControllerProvider);
-//
-//   if (searchText.isEmpty) {
-//     debugPrint("authorController default : $books");
-//     return Future.value(books);
-//   }
-//
-//   debugPrint("authorController : $books");
-//
-//   debugPrint(
-//       "return ${books.where((bookModel) => bookModel.title.toLowerCase().contains(searchText)).toList()}");
-//
-//   return Future.value(books
-//       .where((bookModel) => bookModel.title.toLowerCase().contains(searchText))
-//       .toList());
-// }
+final genreSelectedItemProvider = StateProvider((ref) => 'All');
 
 final futureFilteredList = FutureProvider<List<BookModel>>((ref) {
   final filteredBooks = ref.watch(filteredListBook);
@@ -36,6 +18,21 @@ final searchTextProvider = StateProvider((ref) => '');
 final filteredListBook = StateProvider<List<BookModel>>((ref) {
   final books = ref.watch(authorControllerProvider);
   final searchText = ref.watch(searchTextProvider);
+  final genreSelectedItem = ref.watch(genreSelectedItemProvider);
+
+  if (genreSelectedItem == "All") {
+    debugPrint("authorController default by genre : $books");
+    return books;
+  }
+
+  if (genreSelectedItem != "All") {
+    debugPrint(
+        "return ${books.where((bookModel) => bookModel.genre.contains(genreSelectedItem)).toList()}");
+
+    return books
+        .where((bookModel) => bookModel.genre.contains(genreSelectedItem))
+        .toList();
+  }
 
   if (searchText.isEmpty) {
     debugPrint("authorController default : $books");

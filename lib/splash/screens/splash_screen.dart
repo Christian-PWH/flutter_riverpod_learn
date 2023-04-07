@@ -38,7 +38,6 @@ class SplashScreenState extends ConsumerState {
                 height: 200.0,
                 child: Image.network(
                   "https://cdn.dribbble.com/users/1037957/screenshots/3484170/media/47a6ff2965356748b0987e5b155d6c12.png",
-                  fit: BoxFit.cover,
                 ),
               ),
             ),

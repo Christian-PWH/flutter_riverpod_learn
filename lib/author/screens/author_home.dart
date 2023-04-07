@@ -35,10 +35,7 @@ class AuthorHomeScreenState extends ConsumerState<AuthorHomeScreen> {
 
   Widget _body() {
     return SizedBox(
-      width: MediaQuery
-          .of(context)
-          .size
-          .width,
+      width: MediaQuery.of(context).size.width,
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
@@ -46,7 +43,16 @@ class AuthorHomeScreenState extends ConsumerState<AuthorHomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _menuBar(),
-              _searchBar(),
+              Row(
+                children: [
+                  Flexible(
+                    child: _searchBar(),
+                  ),
+                  Flexible(
+                    child: _filterMenu(),
+                  ),
+                ],
+              ),
               _listProjectView(),
             ],
           ),
@@ -58,10 +64,7 @@ class AuthorHomeScreenState extends ConsumerState<AuthorHomeScreen> {
   Widget _menuBar() {
     return Container(
       margin: const EdgeInsets.only(top: 20.0, bottom: 15.0),
-      width: MediaQuery
-          .of(context)
-          .size
-          .width,
+      width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -109,9 +112,7 @@ class AuthorHomeScreenState extends ConsumerState<AuthorHomeScreen> {
           controller: _searchController,
           onChanged: (value) {
             debugPrint("onChanged :");
-            ref
-                .read(searchTextProvider.notifier)
-                .state = value;
+            ref.read(searchTextProvider.notifier).state = value;
           },
           decoration: InputDecoration(
             hintText: 'Search...',
@@ -123,9 +124,7 @@ class AuthorHomeScreenState extends ConsumerState<AuthorHomeScreen> {
               icon: const Icon(Icons.search),
               onPressed: () {
                 debugPrint("onPressed :");
-                ref
-                    .read(searchTextProvider.notifier)
-                    .state =
+                ref.read(searchTextProvider.notifier).state =
                     _searchController.text;
               },
             ),
@@ -139,6 +138,7 @@ class AuthorHomeScreenState extends ConsumerState<AuthorHomeScreen> {
   }
 
   List<String> genreFilter = [
+    "All",
     "Template",
     "Biography",
     "Romance",
@@ -148,17 +148,84 @@ class AuthorHomeScreenState extends ConsumerState<AuthorHomeScreen> {
     "Casual"
   ];
 
+  List<DropdownMenuItem<String>> get genreDropdownItems {
+    List<DropdownMenuItem<String>> menuItems = [];
+    for (int i = 0; i < genreFilter.length; i++) {
+      menuItems.add(
+          DropdownMenuItem(value: genreFilter[i], child: Text(genreFilter[i])));
+    }
+    return menuItems;
+  }
+
+  Widget genreDropdown() {
+    String selectedGenre = ref.watch(genreSelectedItemProvider);
+    return DropdownButton(
+      value: selectedGenre,
+      onChanged: (value) {
+        ref.read(genreSelectedItemProvider.notifier).state = value!;
+      },
+      items: genreDropdownItems,
+    );
+  }
+
   Widget _showFilterMenu() {
-    return Container();
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      elevation: 5,
+      backgroundColor: Colors.transparent,
+      child: Container(
+        height: 250.0,
+        width: 100.0,
+        padding: const EdgeInsets.all(5.0),
+        margin: const EdgeInsets.all(10.0),
+        decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15.0),
+          boxShadow: const [
+            BoxShadow(
+                color: Colors.black, offset: Offset(0, 10), blurRadius: 10)
+          ],
+        ),
+        child: Column(
+          children: <Widget>[
+            genreDropdown(),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text(
+                    "Close",
+                    style: TextStyle(fontSize: 18),
+                  )),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _filterMenu() {
+    return IconButton(
+        onPressed: () {
+          debugPrint("menu out");
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return _showFilterMenu();
+              });
+        },
+        icon: const Icon(Icons.filter_list));
   }
 
   Widget _listProjectView() {
     final books = ref.watch(futureFilteredList);
     return SizedBox(
-      height: MediaQuery
-          .of(context)
-          .size
-          .height / 1.5,
+      height: MediaQuery.of(context).size.height / 1.5,
       child: Card(
         shape: const RoundedRectangleBorder(
           side: BorderSide(color: Colors.black38),
@@ -273,9 +340,9 @@ class AuthorHomeScreenState extends ConsumerState<AuthorHomeScreen> {
     }
     return Center(
         child: Icon(
-          statusIcon,
-          size: 20.0,
-          color: iconColor,
-        ));
+      statusIcon,
+      size: 20.0,
+      color: iconColor,
+    ));
   }
 }
