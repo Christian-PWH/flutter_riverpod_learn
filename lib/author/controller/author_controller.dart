@@ -6,14 +6,40 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'author_controller.g.dart';
 
-@Riverpod(keepAlive: true)
-Future<List<BookModel>> filteredList(FilteredListRef ref,
-    {String searchText = ''}) {
+// @Riverpod(keepAlive: true)
+// Future<List<BookModel>> filteredList(FilteredListRef ref,
+//     {String searchText = ''}) {
+//   final books = ref.watch(authorControllerProvider);
+//
+//   if (searchText.isEmpty) {
+//     debugPrint("authorController default : $books");
+//     return Future.value(books);
+//   }
+//
+//   debugPrint("authorController : $books");
+//
+//   debugPrint(
+//       "return ${books.where((bookModel) => bookModel.title.toLowerCase().contains(searchText)).toList()}");
+//
+//   return Future.value(books
+//       .where((bookModel) => bookModel.title.toLowerCase().contains(searchText))
+//       .toList());
+// }
+
+final futureFilteredList = FutureProvider<List<BookModel>>((ref) {
+  final filteredBooks = ref.watch(filteredListBook);
+  return Future.value(filteredBooks);
+});
+
+final searchTextProvider = StateProvider((ref) => '');
+
+final filteredListBook = StateProvider<List<BookModel>>((ref) {
   final books = ref.watch(authorControllerProvider);
+  final searchText = ref.watch(searchTextProvider);
 
   if (searchText.isEmpty) {
     debugPrint("authorController default : $books");
-    return Future.value(books);
+    return books;
   }
 
   debugPrint("authorController : $books");
@@ -21,10 +47,10 @@ Future<List<BookModel>> filteredList(FilteredListRef ref,
   debugPrint(
       "return ${books.where((bookModel) => bookModel.title.toLowerCase().contains(searchText)).toList()}");
 
-  return Future.value(books
+  return books
       .where((bookModel) => bookModel.title.toLowerCase().contains(searchText))
-      .toList());
-}
+      .toList();
+});
 
 @Riverpod(keepAlive: true)
 class AuthorController extends _$AuthorController {

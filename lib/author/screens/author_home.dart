@@ -35,7 +35,10 @@ class AuthorHomeScreenState extends ConsumerState<AuthorHomeScreen> {
 
   Widget _body() {
     return SizedBox(
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
@@ -55,7 +58,10 @@ class AuthorHomeScreenState extends ConsumerState<AuthorHomeScreen> {
   Widget _menuBar() {
     return Container(
       margin: const EdgeInsets.only(top: 20.0, bottom: 15.0),
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -102,7 +108,10 @@ class AuthorHomeScreenState extends ConsumerState<AuthorHomeScreen> {
         child: TextField(
           controller: _searchController,
           onChanged: (value) {
-            ref.read(filteredListProvider(searchText: value));
+            debugPrint("onChanged :");
+            ref
+                .read(searchTextProvider.notifier)
+                .state = value;
           },
           decoration: InputDecoration(
             hintText: 'Search...',
@@ -113,9 +122,11 @@ class AuthorHomeScreenState extends ConsumerState<AuthorHomeScreen> {
             prefixIcon: IconButton(
               icon: const Icon(Icons.search),
               onPressed: () {
-                // Perform the search here
-                ref.read(filteredListProvider(
-                    searchText: _searchController.text.trim()));
+                debugPrint("onPressed :");
+                ref
+                    .read(searchTextProvider.notifier)
+                    .state =
+                    _searchController.text;
               },
             ),
             border: OutlineInputBorder(
@@ -127,10 +138,27 @@ class AuthorHomeScreenState extends ConsumerState<AuthorHomeScreen> {
     );
   }
 
+  List<String> genreFilter = [
+    "Template",
+    "Biography",
+    "Romance",
+    "Slice Of Life",
+    "Children Book",
+    "Adventure",
+    "Casual"
+  ];
+
+  Widget _showFilterMenu() {
+    return Container();
+  }
+
   Widget _listProjectView() {
-    final books = ref.watch(filteredListProvider());
+    final books = ref.watch(futureFilteredList);
     return SizedBox(
-      height: MediaQuery.of(context).size.height / 1.5,
+      height: MediaQuery
+          .of(context)
+          .size
+          .height / 1.5,
       child: Card(
         shape: const RoundedRectangleBorder(
           side: BorderSide(color: Colors.black38),
@@ -245,9 +273,9 @@ class AuthorHomeScreenState extends ConsumerState<AuthorHomeScreen> {
     }
     return Center(
         child: Icon(
-      statusIcon,
-      size: 20.0,
-      color: iconColor,
-    ));
+          statusIcon,
+          size: 20.0,
+          color: iconColor,
+        ));
   }
 }
