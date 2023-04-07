@@ -151,10 +151,13 @@ class AuthorHomeScreenState extends ConsumerState<AuthorHomeScreen> {
 
   List<DropdownMenuItem<String>> get genreDropdownItems {
     List<DropdownMenuItem<String>> menuItems = [];
-    for (int i = 0; i < genreFilter.length; i++) {
-      menuItems.add(
-          DropdownMenuItem(value: genreFilter[i], child: Text(genreFilter[i])));
-    }
+    menuItems = genreFilter.map((e) {
+      return DropdownMenuItem(value: e, child: Text(e));
+    }).toList();
+    // for (int i = 0; i < genreFilter.length; i++) {
+    //   menuItems.add(
+    //       DropdownMenuItem(value: genreFilter[i], child: Text(genreFilter[i])));
+    // }
     return menuItems;
   }
 

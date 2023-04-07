@@ -22,48 +22,66 @@ final filteredListBook = StateProvider<List<BookModel>>((ref) {
   final genreSelectedItem = ref.watch(genreSelectedItemProvider);
   final authorSelectedItem = ref.watch(authorSelectedItemProvider);
 
-  if (genreSelectedItem == "All") {
-    debugPrint("authorController default by genre : $books");
-    return books;
-  }
+  List<BookModel> filteredBooks = books;
+
+  // if (genreSelectedItem == "All") {
+  //   // debugPrint("authorController default by genre : $books");
+  //   filteredBooks = books;
+  // }
 
   if (genreSelectedItem != "All") {
-    debugPrint(
-        "return ${books.where((bookModel) => bookModel.genre.contains(genreSelectedItem)).toList()}");
+    // debugPrint(
+    //     "return ${books.where((bookModel) => bookModel.genre.contains(genreSelectedItem)).toList()}");
 
-    return books
-        .where((bookModel) => bookModel.genre.contains(genreSelectedItem))
-        .toList();
+    filteredBooks = filteredBooks.where((bookModel) {
+      // return bookModel.genre.contains(genreSelectedItem.toLowerCase());
+      // return bookModel.genre.where((genre) {
+      //   return genre.toLowerCase().contains(genreSelectedItem.toLowerCase());
+      // }).toList();
+
+      for (final genre in bookModel.genre) {
+        if (genre.toLowerCase().contains(genreSelectedItem.toLowerCase())) {
+          return true;
+        }
+      }
+      return false;
+    }).toList();
   }
 
-  if (authorSelectedItem == "All") {
-    debugPrint("authorController default by genre : $books");
-    return books;
-  }
+  // if (authorSelectedItem == "All") {
+  //   // debugPrint("authorController default by genre : $books");
+  //   return books;
+  // }
 
   if (authorSelectedItem != "All") {
-    debugPrint(
-        "return ${books.where((bookModel) => bookModel.author.toLowerCase().contains(authorSelectedItem)).toList()}");
+    // debugPrint(
+    //     "return ${books.where((bookModel) => bookModel.author.toLowerCase().contains(authorSelectedItem)).toList()}");
 
-    return books
-        .where((bookModel) =>
-            bookModel.author.toLowerCase().contains(authorSelectedItem))
+    filteredBooks = filteredBooks
+        .where((bookModel) => bookModel.author
+            .toLowerCase()
+            .contains(authorSelectedItem.toLowerCase()))
         .toList();
   }
 
-  if (searchText.isEmpty) {
-    debugPrint("authorController default : $books");
-    return books;
+  // if (searchText.isEmpty) {
+  //   // debugPrint("authorController default : $books");
+  //   return books;
+  // }
+
+  // debugPrint("authorController : $books");
+
+  // debugPrint(
+  //     "return ${books.where((bookModel) => bookModel.title.toLowerCase().contains(searchText)).toList()}");
+  // for (int i = 0; i < books.length; i++) {
+  //   debugPrint(books[i].toString());
+  // }
+  debugPrint("FILTERED ---");
+  for (int i = 0; i < filteredBooks.length; i++) {
+    debugPrint(filteredBooks[i].title.toString());
   }
 
-  debugPrint("authorController : $books");
-
-  debugPrint(
-      "return ${books.where((bookModel) => bookModel.title.toLowerCase().contains(searchText)).toList()}");
-
-  return books
-      .where((bookModel) => bookModel.title.toLowerCase().contains(searchText))
-      .toList();
+  return filteredBooks;
 });
 
 @Riverpod(keepAlive: true)

@@ -37,6 +37,36 @@ class AuthorRepository {
       "author": "Matt Zhang",
       "createdAt": DateTime(2020, 1, 23),
       "bookDesc": "A bedtime story for kids",
+    },
+    {
+      "id": "3",
+      "imagePath":
+          "https://marketplace.canva.com/EAD7YHrjZYY/1/0/1003w/canva-blue-illustrated-stars-children%27s-book-cover-haFtaSNXXF4.jpg",
+      "title": "Cerita si hantu",
+      "genre": ["Biography", "casual"],
+      "author": "MyNameHere",
+      "createdAt": DateTime(2020, 1, 23),
+      "bookDesc": "A bedtime story for kids",
+    },
+    {
+      "id": "4",
+      "imagePath":
+          "https://marketplace.canva.com/EAD7YHrjZYY/1/0/1003w/canva-blue-illustrated-stars-children%27s-book-cover-haFtaSNXXF4.jpg",
+      "title": "Winkey wili",
+      "genre": ["Slice of Life", "Adventure", "Romance"],
+      "author": "Matt Zhang",
+      "createdAt": DateTime(2020, 1, 23),
+      "bookDesc": "A bedtime story for kids",
+    },
+    {
+      "id": "5",
+      "imagePath":
+          "https://marketplace.canva.com/EAD7YHrjZYY/1/0/1003w/canva-blue-illustrated-stars-children%27s-book-cover-haFtaSNXXF4.jpg",
+      "title": "NHentai",
+      "genre": ["Template"],
+      "author": "Claudia Wilson",
+      "createdAt": DateTime(2020, 1, 23),
+      "bookDesc": "A bedtime story for kids",
     }
   ];
 
