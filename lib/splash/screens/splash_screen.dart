@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod_learn/author/controller/author_controller.dart';
 import 'package:flutter_riverpod_learn/author/screens/author_home.dart';
+import 'package:flutter_riverpod_learn/common/controller/author_name_controller.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   static const routeName = '/splash_screen';
@@ -19,7 +20,7 @@ class SplashScreenState extends ConsumerState {
   void initState() {
     // TODO: implement initState
     super.initState();
-    ref.read(staticGetAuthorsProvider);
+    ref.read(authorNameControllerProvider.notifier).getAuthors();
     Timer(const Duration(seconds: 2),
         () => Navigator.popAndPushNamed(context, AuthorHomeScreen.routeName));
   }

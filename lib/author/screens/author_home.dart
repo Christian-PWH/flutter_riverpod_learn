@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod_learn/author/controller/author_controller.dart';
+import 'package:flutter_riverpod_learn/common/controller/author_name_controller.dart';
 import 'package:flutter_riverpod_learn/common/models/book_model.dart';
 import 'package:flutter_riverpod_learn/common/styles/constant.dart';
 import 'package:flutter_riverpod_learn/common/widgets/custom_appbar.dart';
@@ -158,9 +159,8 @@ class AuthorHomeScreenState extends ConsumerState<AuthorHomeScreen> {
   }
 
   Widget genreDropdown() {
-    String selectedGenre = ref.watch(genreSelectedItemProvider);
     return DropdownButton(
-      value: selectedGenre,
+      value: ref.watch(genreSelectedItemProvider),
       onChanged: (value) {
         ref.read(genreSelectedItemProvider.notifier).state = value!;
       },
@@ -168,23 +168,23 @@ class AuthorHomeScreenState extends ConsumerState<AuthorHomeScreen> {
     );
   }
 
-  List<DropdownMenuItem<String>> get authorDropdownItems {
+  List<DropdownMenuItem<String>> get authorsDropdownItems {
     List<DropdownMenuItem<String>> menuItems = [];
-    List<String> authorFilterItem = ref.watch();
-    for (int i = 0; i < genreFilter.length; i++) {
-      menuItems.add(
-          DropdownMenuItem(value: genreFilter[i], child: Text(genreFilter[i])));
+    List<String> authorListItem = ref.watch(authorNameControllerProvider);
+    for (int i = 0; i < authorListItem.length; i++) {
+      menuItems.add(DropdownMenuItem(
+          value: authorListItem[i], child: Text(authorListItem[i])));
     }
     return menuItems;
   }
 
-  Widget authorDropdown() {
+  Widget authorsDropdown() {
     return DropdownButton(
       value: ref.watch(authorSelectedItemProvider),
       onChanged: (value) {
         ref.read(authorSelectedItemProvider.notifier).state = value!;
       },
-      items: genreDropdownItems,
+      items: authorsDropdownItems,
     );
   }
 
@@ -210,8 +210,10 @@ class AuthorHomeScreenState extends ConsumerState<AuthorHomeScreen> {
           ],
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             genreDropdown(),
+            authorsDropdown(),
             Align(
               alignment: Alignment.bottomRight,
               child: ElevatedButton(

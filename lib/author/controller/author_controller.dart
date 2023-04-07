@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod_learn/author/repository/author_repository.dart';
+import 'package:flutter_riverpod_learn/common/controller/author_name_controller.dart';
 import 'package:flutter_riverpod_learn/common/models/book_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -19,6 +20,7 @@ final filteredListBook = StateProvider<List<BookModel>>((ref) {
   final books = ref.watch(authorControllerProvider);
   final searchText = ref.watch(searchTextProvider);
   final genreSelectedItem = ref.watch(genreSelectedItemProvider);
+  final authorSelectedItem = ref.watch(authorSelectedItemProvider);
 
   if (genreSelectedItem == "All") {
     debugPrint("authorController default by genre : $books");
@@ -31,6 +33,21 @@ final filteredListBook = StateProvider<List<BookModel>>((ref) {
 
     return books
         .where((bookModel) => bookModel.genre.contains(genreSelectedItem))
+        .toList();
+  }
+
+  if (authorSelectedItem == "All") {
+    debugPrint("authorController default by genre : $books");
+    return books;
+  }
+
+  if (authorSelectedItem != "All") {
+    debugPrint(
+        "return ${books.where((bookModel) => bookModel.author.toLowerCase().contains(authorSelectedItem)).toList()}");
+
+    return books
+        .where((bookModel) =>
+            bookModel.author.toLowerCase().contains(authorSelectedItem))
         .toList();
   }
 
@@ -47,13 +64,6 @@ final filteredListBook = StateProvider<List<BookModel>>((ref) {
   return books
       .where((bookModel) => bookModel.title.toLowerCase().contains(searchText))
       .toList();
-});
-
-final authorSelectedItemProvider = StateProvider((ref) => 'All');
-
-final staticGetAuthorsProvider = StateProvider<Future<List<String>>>((ref) {
-  AuthorRepository authorRepository = ref.watch(authorRepositoryProvider);
-  return authorRepository.getAuthor();
 });
 
 @Riverpod(keepAlive: true)
@@ -75,14 +85,5 @@ class AuthorController extends _$AuthorController {
         response.map((e) => BookModel.fromMap(e)).toList();
     state = books;
     return books;
-  }
-
-  Future<List<String>> getAuthors() async {
-    final response = await authorRepository.getAuthor();
-    if (response.isEmpty) {
-      return [];
-    }
-    state = response;
-    return response;
   }
 }
