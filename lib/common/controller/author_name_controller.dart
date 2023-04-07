@@ -21,7 +21,9 @@ class AuthorNameController extends _$AuthorNameController {
     if (response.isEmpty) {
       return [];
     }
-    state = response;
-    return response;
+    List<String> tmpList = ["All"];
+    tmpList.addAll(response);
+    state = tmpList;
+    return tmpList;
   }
 }
