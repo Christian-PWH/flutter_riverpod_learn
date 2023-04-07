@@ -49,6 +49,13 @@ final filteredListBook = StateProvider<List<BookModel>>((ref) {
       .toList();
 });
 
+final authorSelectedItemProvider = StateProvider((ref) => 'All');
+
+final staticGetAuthorsProvider = StateProvider<Future<List<String>>>((ref) {
+  AuthorRepository authorRepository = ref.watch(authorRepositoryProvider);
+  return authorRepository.getAuthor();
+});
+
 @Riverpod(keepAlive: true)
 class AuthorController extends _$AuthorController {
   late final AuthorRepository authorRepository;
@@ -60,7 +67,7 @@ class AuthorController extends _$AuthorController {
   }
 
   Future<List<BookModel>> getBooks() async {
-    final response = await authorRepository.get();
+    final response = await authorRepository.getBooks();
     if (response.isEmpty) {
       return [];
     }
@@ -70,22 +77,12 @@ class AuthorController extends _$AuthorController {
     return books;
   }
 
-  Future<List<BookModel>> filtered({String searchText = ''}) async {
-    final books = ref.watch(authorControllerProvider);
-
-    if (searchText.isEmpty) {
-      debugPrint("authorController default : $books");
-      return Future.value(books);
+  Future<List<String>> getAuthors() async {
+    final response = await authorRepository.getAuthor();
+    if (response.isEmpty) {
+      return [];
     }
-
-    debugPrint("authorController : $books");
-
-    debugPrint(
-        "return ${books.where((bookModel) => bookModel.title.toLowerCase().contains(searchText)).toList()}");
-
-    return Future.value(books
-        .where(
-            (bookModel) => bookModel.title.toLowerCase().contains(searchText))
-        .toList());
+    state = response;
+    return response;
   }
 }

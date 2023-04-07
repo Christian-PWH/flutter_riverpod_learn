@@ -40,9 +40,19 @@ class AuthorRepository {
     }
   ];
 
+  List<String> dummyAuthorData = [
+    "MyNameHere",
+    "Claudia Wilson",
+    "Matt Zhang",
+  ];
+
   AuthorRepository();
 
-  Future<List<Map<String, dynamic>>> get() async {
+  Future<List<Map<String, dynamic>>> getBooks() async {
     return Future.delayed(const Duration(seconds: 2), () => dummyData);
+  }
+
+  Future<List<String>> getAuthor() async {
+    return Future.delayed(const Duration(seconds: 2), () => dummyAuthorData);
   }
 }

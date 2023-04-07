@@ -168,6 +168,26 @@ class AuthorHomeScreenState extends ConsumerState<AuthorHomeScreen> {
     );
   }
 
+  List<DropdownMenuItem<String>> get authorDropdownItems {
+    List<DropdownMenuItem<String>> menuItems = [];
+    List<String> authorFilterItem = ref.watch();
+    for (int i = 0; i < genreFilter.length; i++) {
+      menuItems.add(
+          DropdownMenuItem(value: genreFilter[i], child: Text(genreFilter[i])));
+    }
+    return menuItems;
+  }
+
+  Widget authorDropdown() {
+    return DropdownButton(
+      value: ref.watch(authorSelectedItemProvider),
+      onChanged: (value) {
+        ref.read(authorSelectedItemProvider.notifier).state = value!;
+      },
+      items: genreDropdownItems,
+    );
+  }
+
   Widget _showFilterMenu() {
     return Dialog(
       shape: RoundedRectangleBorder(

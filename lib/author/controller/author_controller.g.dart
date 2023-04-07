@@ -6,7 +6,7 @@ part of 'author_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authorControllerHash() => r'53744f2d7adfd1d6001712791fc9270b4ab7b81c';
+String _$authorControllerHash() => r'5e22f9e1de6cc65ff567995d8934a385643567ab';
 
 /// See also [AuthorController].
 @ProviderFor(AuthorController)
